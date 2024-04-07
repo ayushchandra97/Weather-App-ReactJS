@@ -1,0 +1,40 @@
+@import "./components/WeatherApp/weatherapp.css";
+
+header, footer {
+    background-color: rgb(119, 16, 142);
+    height: 5rem;
+    padding: 17px;
+}
+
+h1, footer > p {
+    text-align: center;
+    color: white;
+}
+
+footer > p {
+    font-size: 2.5rem;
+}
+
+footer > p > a {
+    text-decoration: none;
+    color: #efa8ee;
+    font-weight: bold;
+}
+
+footer > p > a:hover {
+    color: #f578f3;
+}
+
+@media only screen and (max-width: 600px) {
+    header, footer {
+        width: 100%;
+    }
+
+    footer {
+        padding-top: 25px;
+    }
+
+    footer > p {
+        font-size: 1.6rem;
+    }
+}
