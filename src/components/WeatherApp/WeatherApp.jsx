@@ -11,97 +11,103 @@ import mist_icon from "/src/assets/foog.png"
 import { useState, useCallback } from "react"
 import SearchBar from "./SearchBar"
 import WeatherInfoContainer from "./WeatherInfoContainer"
+import { useErrorBoundary } from "react-error-boundary"
 
 export default function WeatherApp() {
+
+    const { showBoundary } = useErrorBoundary()
+
     const openweather_api_key = import.meta.env.VITE_OPENWEATHER_API_KEY
-    const geodb_api_key = import.meta.env.VITE_GEODB_API_KEY
+    const geonames_user_id = import.meta.env.VITE_GEONAMES_USER_ID
     const [input, setInput] = useState("")
     const [results, setResults] = useState([])
     const [icon, setIcon] = useState(sun_icon)
 
     async function fetchData(value) {
-        const city_url = `https://wft-geo-db.p.rapidapi.com/v1/geo/cities?minPopulation=1000000&namePrefix=${value}`
-        const options = {
-            method: 'GET',
-            headers: {
-                'X-RapidAPI-Key': geodb_api_key,
-                'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com'
-            }
-        }
+        const city_url = `https://secure.geonames.org/searchJSON?name_startsWith=${value}&maxRows=10&username=${geonames_user_id}`
 
         try {
-            const response = await fetch(city_url, options)
+            const response = await fetch(city_url)
+            console.log(response.status)
+            if (!response.ok) {
+                const error = new Error(`Error ${response.status} : ${response.statusText}`)
+                error.status = response.status
+                error.statusText = response.statusText
+                throw error
+            }
             const city_data = await response.json()
-            // console.log(city_data)
-            const city_data_arr = Object.entries(city_data)
-            // console.log(city_data_arr[0][1])
-            setResults(city_data_arr[0][1])
-            console.log(results)
-        } catch (err) {
-            console.error(err)
+            const city_data_arr = city_data.geonames
+            setResults(city_data_arr)
+        } catch (error) {
+            showBoundary(error)
             return
         }
     }
 
 
     const weather = useCallback(async () => {
-         let city_name = input
-         let url = `https://api.openweathermap.org/data/2.5/weather?q=${city_name}&units=Metric&appid=${openweather_api_key}`
-         if (city_name == "") {
-             return
-         }
-         try {
-             let response = await fetch(url)
-             let data = await response.json()
-             console.log(data)
-             let humidity = document.getElementsByClassName("humidity-percent")[0]
-             let temperature = document.getElementById("temp")
-             let wind_speed = document.getElementsByClassName("wind-speed")[0]
-             let location = document.getElementById("city")
- 
-             humidity.textContent = data.main.humidity + "%"
-             wind_speed.textContent = data.wind.speed + "km/h"
-             temperature.textContent = Math.round(data.main.temp) + "°C"
-             location.textContent = input
- 
-             if (data.weather[0].icon == "01d" || data.weather[0].icon == "01n") {
-                 setIcon(sun_icon)
-             }
-             if (data.weather[0].icon == "02d" || data.weather[0].icon == "02n") {
-                 setIcon(cloudy_sun_icon)
-             }
-             if (data.weather[0].icon == "03d" || data.weather[0].icon == "03n" || data.weather[0].icon == "04d" || data.weather[0].icon == "04n") {
-                 setIcon(cloudy_icon)
-             }
-             if (data.weather[0].icon == "13d") {
-                 setIcon(snowy_icon)
-             }
-             if (data.weather[0].id == 500 || data.weather[0].id == 501 || data.weather[0].icon == "09d") {
-                 setIcon(rain_sun_icon)
-             }
-             if (data.weather[0].id == 502 || data.weather[0].id == 503 || data.weather[0].id == 504) {
-                 setIcon(rain_storm_icon)
-             }
-             if (data.weather[0].icon == "11d") {
-                 setIcon(rain_storm_icon)
-             }
-             if (data.weather[0].icon == "50d" || data.weather[0].icon == "50n") {
-                 setIcon(mist_icon)
-             }
- 
-         } catch (err) {
-             console.log(err)
-             return
-         }
-     // eslint-disable-next-line react-hooks/exhaustive-deps
-     }, [input])
-       
+        let city_name = input
+        let url = `https://api.openweathermap.org/data/2.5/weather?q=${city_name}&units=Metric&appid=${openweather_api_key}`
+        if (city_name == "") {
+            return
+        }
+        try {
+            let response = await fetch(url)
+            let data = await response.json()
+            if (!response.ok) {
+                const error = new Error(`Error ${response.status} : ${response.statusText}`)
+                error.status = response.status
+                error.statusText = response.statusText
+                throw error
+            }
+            let humidity = document.getElementsByClassName("humidity-percent")[0]
+            let temperature = document.getElementById("temp")
+            let wind_speed = document.getElementsByClassName("wind-speed")[0]
+            let location = document.getElementById("city")
+
+            humidity.textContent = data.main.humidity + "%"
+            wind_speed.textContent = data.wind.speed + "km/h"
+            temperature.textContent = Math.round(data.main.temp) + "°C"
+            location.textContent = input
+
+            if (data.weather[0].icon == "01d" || data.weather[0].icon == "01n") {
+                setIcon(sun_icon)
+            }
+            if (data.weather[0].icon == "02d" || data.weather[0].icon == "02n") {
+                setIcon(cloudy_sun_icon)
+            }
+            if (data.weather[0].icon == "03d" || data.weather[0].icon == "03n" || data.weather[0].icon == "04d" || data.weather[0].icon == "04n") {
+                setIcon(cloudy_icon)
+            }
+            if (data.weather[0].icon == "13d") {
+                setIcon(snowy_icon)
+            }
+            if (data.weather[0].id == 500 || data.weather[0].id == 501 || data.weather[0].icon == "09d") {
+                setIcon(rain_sun_icon)
+            }
+            if (data.weather[0].id == 502 || data.weather[0].id == 503 || data.weather[0].id == 504) {
+                setIcon(rain_storm_icon)
+            }
+            if (data.weather[0].icon == "11d") {
+                setIcon(rain_storm_icon)
+            }
+            if (data.weather[0].icon == "50d" || data.weather[0].icon == "50n") {
+                setIcon(mist_icon)
+            }
+
+        } catch (error) {
+            showBoundary(error)
+            return
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [input])
+
 
     return (
         <>
             <section id="main-section">
-                <SearchBar searchIcon = {search_icon} input = {input} setInput = {setInput}  weather = {weather} fetchData = {fetchData} results = {results}/>
-                <WeatherInfoContainer icon = {icon} windIcon = {wind_icon} humidityIcon = {humidity_icon}/>
+                <SearchBar searchIcon={search_icon} input={input} setInput={setInput} weather={weather} fetchData={fetchData} results={results} />
+                <WeatherInfoContainer icon={icon} windIcon={wind_icon} humidityIcon={humidity_icon} />
             </section>
         </>
     )

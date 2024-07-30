@@ -65,7 +65,7 @@ export default function SearchBar({searchIcon, input, setInput, weather, fetchDa
                         const city_name = result.name.toLowerCase()
                         return input && city_name.includes(searchTerm) && searchTerm !== city_name
                     }).map((result, id) => (
-                        <div onClick={() => onSearch(result.name)} className="dropdown-list" key={id}>{result.name}</div>
+                        <div onClick={() => onSearch(result.name)} className="dropdown-list" key={id}>{result.name}, {result.adminName1}, {result.countryName}</div>
                     )
                     )}
                 </div>
