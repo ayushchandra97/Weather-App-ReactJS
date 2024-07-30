@@ -28,9 +28,16 @@
     border: none;
     cursor: pointer;
     transition: 0.3s;
-    box-shadow: 0px 0px 10px 2px rgb(130 52 147);
+    box-shadow: 0 0 10px 2px rgb(130 52 147);
 }
 
 .container-err > button:hover {
     background-color: rgba(99, 14, 118, 0.7);
+}
+
+@media only screen and (max-width: 600px) {
+    .container-err {
+        width: 95%;
+        height: 95%;
+    }
 }
