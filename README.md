@@ -8,4 +8,4 @@ Currently only shows current temperature, wind speed and humidity.
 
 It also uses react-error-boundary to handle errors and show a fallback UI.
 
-More Features I'm working on are incorporating max and min temperatures, 3 hour 5 days forecast, and improving the UI.
+More Features I'm working on are incorporating max and min temperatures, 3 hour forecast for 5 days , and improving the UI.
