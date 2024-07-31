@@ -1,5 +1,8 @@
 .container-err-outside {
-    height: 500px;
+    height: 100dvh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .container-err {
@@ -7,7 +10,6 @@
     font-weight: 800;
     height: 400px;
     width: 500px;
-    margin:  50px auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -38,6 +40,5 @@
 @media only screen and (max-width: 600px) {
     .container-err {
         width: 95%;
-        height: 95%;
     }
 }

@@ -7,13 +7,11 @@ import ErrorComponent from './components/ErrorComponent/ErrorComponent'
 
 function App() {
   return (
-    <>
+    <ErrorBoundary FallbackComponent={ErrorComponent}>
       <TitleBar />
-      <ErrorBoundary FallbackComponent={ErrorComponent}>
-        <WeatherApp />
-      </ErrorBoundary>
+      <WeatherApp />
       <FooterBar />
-    </>
+    </ErrorBoundary>
   )
 }
 
