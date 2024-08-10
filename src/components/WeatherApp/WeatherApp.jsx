@@ -17,8 +17,8 @@ export default function WeatherApp() {
 
     const { showBoundary } = useErrorBoundary()
 
-    const openweather_api_key = import.meta.env.VITE_OPENWEATHER_API_KEY || process.env.VITE_OPENWEATHER_API_KEY
-    const geonames_user_id = import.meta.env.VITE_GEONAMES_USER_ID || process.env.VITE_GEONAMES_USER_ID
+    const openweather_api_key = import.meta.env.VITE_OPENWEATHER_API_KEY 
+    const geonames_user_id = import.meta.env.VITE_GEONAMES_USER_ID
     const [input, setInput] = useState("")
     const [results, setResults] = useState([])
     const [icon, setIcon] = useState(sun_icon)
